@@ -1,0 +1,11 @@
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#yarn-errorlog
+yarn-error.log
+
+#node modules
+node_modules
+*.log
