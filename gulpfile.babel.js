@@ -1,8 +1,12 @@
+'use strict';
 import gulp from "gulp";
 import gpug from "gulp-pug";
 import del from "del";
 import ws from "gulp-webserver";
 import image from "gulp-image";
+import sass from "gulp-sass";
+
+sass.compiler = require('node-sass');
 
 const routes = {
     pug:{
@@ -14,6 +18,11 @@ const routes = {
         src: "src/img/*",
         dest: "build/img"
     },
+    scss:{
+        watch:"src/scss/**/*",
+        src:"src/scss/style.scss",
+        dest:"build/css",
+    }
 };
 
 const pug = () => 
@@ -29,6 +38,7 @@ const webserver = () =>
     gulp.src("build").pipe(ws({livereload:true, open:true}));
 
 const watch = () => {
+    gulp.watch(routes.scss.watch, styles);
     gulp.watch(routes.pug.watch, pug);
 };
 
@@ -37,9 +47,13 @@ const img = () =>
     .pipe(image())
     .pipe(gulp.dest(routes.img.dest))
 
+const styles = () => gulp.src(routes.scss.src)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(routes.scss.dest))
+
 const prepare = gulp.series([clean, img]);
 
-const assets = gulp.series([pug]);
+const assets = gulp.series([pug, styles]);
 
 const postDev = gulp.parallel([webserver, watch]);
 
