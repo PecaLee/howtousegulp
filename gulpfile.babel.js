@@ -5,6 +5,7 @@ import del from "del";
 import ws from "gulp-webserver";
 import image from "gulp-image";
 import sass from "gulp-sass";
+import autop from "gulp-autoprefixer";
 
 sass.compiler = require('node-sass');
 
@@ -49,6 +50,7 @@ const img = () =>
 
 const styles = () => gulp.src(routes.scss.src)
     .pipe(sass().on('error', sass.logError))
+    .pipe(autop())
     .pipe(gulp.dest(routes.scss.dest))
 
 const prepare = gulp.series([clean, img]);
